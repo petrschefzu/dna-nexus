@@ -1,5 +1,6 @@
 import { CommandProcessor, ReadSettings } from '../src/command-processor';
 import { FileCacheManager } from '../src/file-cache.manager';
+import { NullLogger } from '../src/null.logger';
 /**
  * To simplify test isolation, we are using a different file for each test case.
  *
@@ -13,7 +14,8 @@ describe('Command processor should', () => {
     };
 
     const cache = new FileCacheManager(request.fileName);
-    const processor = new CommandProcessor(cache);
+    const logger = new NullLogger();
+    const processor = new CommandProcessor(cache, logger);
     expect(await processor.read(request)).toBe('lemon');
 
     await cache.clear();
@@ -26,7 +28,8 @@ describe('Command processor should', () => {
     };
 
     const cache = new FileCacheManager(request.fileName);
-    const processor = new CommandProcessor(cache);
+    const logger = new NullLogger();
+    const processor = new CommandProcessor(cache, logger);
     expect(cache.exists()).toBe(false);
     expect(await processor.read(request)).toBe('lemon');
     expect(cache.exists()).toBe(true);
@@ -47,7 +50,8 @@ describe('Command processor should', () => {
     };
 
     const cache = new FileCacheManager(lastLine.fileName);
-    const processor = new CommandProcessor(cache);
+    const logger = new NullLogger();
+    const processor = new CommandProcessor(cache, logger);
 
     const timer_0 = Date.now();
     expect(await processor.read(lastLine)).toBe(
@@ -64,6 +68,30 @@ describe('Command processor should', () => {
 
     expect(firstRun).not.toBeCloseTo(0);
     expect(secondRun).toBeCloseTo(0);
+
+    await cache.clear();
+  }, 10_000);
+
+  test('should init cache only once per file', async () => {
+    const fileName = 'input_file_4.txt';
+
+    const cache = new FileCacheManager(fileName);
+    const logger = new NullLogger();
+    const processor = new CommandProcessor(cache, logger);
+
+    const spyOnLogger = jest.spyOn(logger, 'log');
+    const spyOnCache = jest.spyOn(cache, 'init');
+
+    await processor.read({ fileName, lineNumber: 3 });
+    await processor.read({ fileName, lineNumber: 1 });
+    await processor.read({ fileName, lineNumber: 0 });
+    await processor.read({ fileName, lineNumber: 2 });
+
+    expect(spyOnLogger).toHaveBeenCalledWith(
+      `Writing index to ${fileName} done.`,
+    );
+    expect(spyOnLogger).toHaveBeenCalledTimes(1);
+    expect(spyOnCache).toHaveBeenCalledTimes(1);
 
     await cache.clear();
   }, 10_000);

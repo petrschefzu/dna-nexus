@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
 import { LineCacheManager } from './line-cache.manager';
+import { Logger } from './logger';
 
 export interface ReadSettings {
   fileName: string;
@@ -9,7 +10,10 @@ export interface ReadSettings {
 }
 
 export class CommandProcessor {
-  constructor(private readonly cache: LineCacheManager) {}
+  constructor(
+    private readonly cache: LineCacheManager,
+    private readonly logger: Logger,
+  ) {}
 
   public async read(file: ReadSettings): Promise<string> {
     if (!this.cache.exists()) {
@@ -45,5 +49,7 @@ export class CommandProcessor {
       this.cache.set(currentLine, line);
       currentLine++;
     }
+
+    this.logger.log(`Writing index to ${fileName} done.`);
   }
 }
