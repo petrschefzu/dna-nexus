@@ -1,10 +1,10 @@
-import { CommandProcessor, ReadProps } from '../src/command-processor';
+import { CommandProcessor, ReadSettings } from '../src/command-processor';
 
 describe('Command processor should', () => {
     test('read given file and return requested line', async() => {
-        const request: ReadProps = {
+        const request: ReadSettings = {
             fileName: 'input_file.txt',
-            lineNumber: 2
+            lineNumber: 3
         };
 
         const processor = new CommandProcessor();
