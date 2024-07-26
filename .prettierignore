@@ -1,0 +1,10 @@
+# Build files
+node_modules/
+
+# Config files
+.prettierignore
+.gitignore
+.vscode/
+
+# Ignore files fof NPM
+package-lock.json
