@@ -31,3 +31,25 @@ orange
 $ random_line input_file.txt 0
 apple
 ```
+
+## Application docs
+
+### Tech Stack
+
+- [NodeJS >= 20](https://nodejs.org/docs/latest-v20.x/api/index.html)
+- [Typescript](https://www.typescriptlang.org/docs/home)
+- [Jest](https://jestjs.io/docs/getting-started)
+
+### Running the application
+
+- clone git repository
+- run `npm run install`
+- run `npm run read_line fileName lineOfFile`
+  - file with given name has to be in the src/files folder, feel free to add yours
+- you can also run tests if needed, they should cover all the requirements `npm run test`
+
+### Final note
+
+I prioritized simplicity over a more production-ready structure and naming, while still ensuring everything is of good enough quality for readability. The code doesn't handle all edge cases, but I tried to at least identify some of them.
+
+I've also created a few tests that are fully isolated and clean up after themselves. These tests would be approached a bit differently in a production application.

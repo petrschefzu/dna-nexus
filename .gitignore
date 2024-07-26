@@ -1,2 +1,4 @@
 .history
 node_modules
+src/files/cache
+src/files/cmd-cache

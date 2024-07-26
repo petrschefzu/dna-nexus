@@ -15,6 +15,11 @@ export class CommandProcessor {
     private readonly logger: Logger,
   ) {}
 
+  static fileExists(fileName: string): boolean {
+    const filePath = path.join(__dirname, 'files', fileName);
+    return fs.existsSync(filePath);
+  }
+
   public async read(file: ReadSettings): Promise<string> {
     if (!this.cache.exists()) {
       await this.indexFile(file.fileName);

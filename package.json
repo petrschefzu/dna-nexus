@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "test": "jest",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "read_line": "ts-node scripts/read_line.ts"
   },
   "author": "Petr Schefzu",
   "license": "ISC",

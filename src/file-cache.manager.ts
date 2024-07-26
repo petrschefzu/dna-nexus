@@ -10,9 +10,9 @@ import { fileHash } from './helpers';
 export class FileCacheManager implements LineCacheManager {
   private readonly cacheDir: string;
 
-  constructor(fileName: string) {
+  constructor(fileName: string, dir: string = 'cache') {
     const filePath = path.join(__dirname, 'files', fileName);
-    this.cacheDir = path.join(__dirname, 'cache', fileHash(filePath));
+    this.cacheDir = path.join(__dirname, dir, fileHash(filePath));
   }
 
   init(): void {
