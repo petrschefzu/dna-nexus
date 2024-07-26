@@ -4,7 +4,7 @@ import { LineCacheManager } from './line-cache.manager';
 import { fileHash } from './helpers';
 
 /**
- * Compared to FileReader,
+ * Compared to CommandProcessor,
  * we don't need to work with streams here, so we can use the synchronous version of the file system module.
  */
 export class FileCacheManager implements LineCacheManager {
