@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
+import { LineCacheManager } from './line-cache.manager';
 
 export interface ReadSettings {
   fileName: string;
@@ -8,8 +9,24 @@ export interface ReadSettings {
 }
 
 export class CommandProcessor {
+  constructor(private readonly cache: LineCacheManager) {}
+
   public async read(file: ReadSettings): Promise<string> {
-    const filePath = path.join(__dirname, 'files', file.fileName);
+    if (!this.cache.exists()) {
+      await this.indexFile(file.fileName);
+    }
+
+    if (!this.cache.has(file.lineNumber)) {
+      throw new Error(
+        `Line ${file.lineNumber} not found in file ${file.fileName}.`,
+      );
+    }
+
+    return this.cache.get(file.lineNumber);
+  }
+
+  public async indexFile(fileName: string) {
+    const filePath = path.join(__dirname, 'files', fileName);
     /**
      * It is important to use streams when reading large files,
      * because it allows you to read the file in chunks, instead of loading the entire file into memory.
@@ -23,15 +40,10 @@ export class CommandProcessor {
     });
 
     let currentLine = 0;
+    this.cache.init();
     for await (const line of rl) {
-      if (currentLine === file.lineNumber) {
-        return line;
-      }
+      this.cache.set(currentLine, line);
       currentLine++;
     }
-
-    throw new Error(
-      `Line ${file.lineNumber} not found in file ${file.fileName}`,
-    );
   }
 }
